@@ -1,0 +1,11 @@
+[user]
+	name = Boyou Yu
+	email = byu72442@gmail.com
+[core]
+	editor = emacs
+[init]
+	defaultbranch = main
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
