@@ -64,6 +64,8 @@ case ":$PATH:" in
     *) export PATH="/snap/bin:$PATH" ;;
 esac
 
+[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
+
 # =========================
 # NVM (optional)
 # =========================
@@ -73,7 +75,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # =========================
-# Prompt (核心區)
+# Prompt
 # =========================
 
 autoload -Uz add-zsh-hook
@@ -98,7 +100,7 @@ eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
 
 # =========================
-# Aliases（實用）
+# Aliases
 # =========================
 
 alias ls='eza --icons --grid --group-directories-first'
@@ -112,6 +114,9 @@ alias gs='git status'
 alias gc='git commit'
 alias gp='git push'
 alias gl='git pull'
+
+# Find
+alias fd='fdfind'
 
 # =========================
 # End
