@@ -29,6 +29,7 @@ if command -v apt-get &>/dev/null; then
     info "Installing apt packages..."
     sudo apt-get update -qq
     sudo apt-get install -y -qq \
+        curl \
         git \
         zsh \
         zsh-autosuggestions \

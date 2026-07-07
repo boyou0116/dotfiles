@@ -20,7 +20,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 ```
 
 `install.sh` will:
-1. Install apt packages (`git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`)
+1. Install apt packages (`curl`, `git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`)
 2. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
 3. Install Emacs via snap (skipped if already present)
 4. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
