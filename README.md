@@ -18,7 +18,7 @@ git clone https://github.com/<your-username>/dotfiles.git ~/dotfiles && ~/dotfil
 ```
 
 `install.sh` will:
-1. Install apt packages (`zsh`, `eza`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`)
+1. Install apt packages (`zsh`, `eza`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`)
 2. Install Starship, zoxide, and nvm (skipped if already present)
 3. Symlink `~/.zshrc`, `~/.gitconfig`, and `~/.claude/` configs (backs up any existing files with `.bak`)
 4. Set zsh as the default shell
@@ -58,7 +58,7 @@ git clone https://github.com/<your-username>/dotfiles.git ~/dotfiles && ~/dotfil
 
 | Alias | Expands to                                     | Notes                                                                |
 |-------|------------------------------------------------|----------------------------------------------------------------------|
-| `ls`  | `eza --icons --grid --group-directories-first` | Requires [eza](https://github.com/eza-community/eza)                 |
+| `ls`  | `eza --icons --group-directories-first`        | Requires [eza](https://github.com/eza-community/eza)                 |
 | `bat` | `batcat`                                       | Debian/Ubuntu package name for [bat](https://github.com/sharkdp/bat) |
 | `pip` | `python3 -m pip`                               | Avoids bare `pip` ambiguity                                          |
 | `gs`  | `git status`                                   |                                                                      |

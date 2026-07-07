@@ -13,5 +13,6 @@
         "repo": "openai/codex-plugin-cc"
       }
     }
-  }
+  },
+  "tui": "fullscreen"
 }

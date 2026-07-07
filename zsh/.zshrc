@@ -103,7 +103,7 @@ eval "$(starship init zsh)"
 # Aliases
 # =========================
 
-alias ls='eza --icons --grid --group-directories-first'
+alias ls='eza --icons --group-directories-first'
 alias bat='batcat'
 
 # Python

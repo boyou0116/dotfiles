@@ -3,7 +3,7 @@
 input=$(cat)
 
 # ── Parse JSON ────────────────────────────────────────────────
-MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"')
+MODEL=$(echo "$input" | jq -r 'if (.model | type) == "object" then .model.display_name else .model end // "Claude"')
 DIR=$(echo "$input" | jq -r '.workspace.current_dir')
 COST=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
@@ -147,10 +147,11 @@ fi
 # ── Context bar ───────────────────────────────────────────────
 BAR_COLOR=$(color_pct "$PCT")
 BAR_W=15
-FILLED=$((PCT * BAR_W / 100)); EMPTY=$((BAR_W - FILLED))
+FILLED=$((PCT * BAR_W / 100))
+EMPTY=$((BAR_W - FILLED))
 BAR=""
-for i in $(seq 1 $FILLED); do BAR="${BAR}${BAR_COLOR}●${RESET}"; done
-for i in $(seq 1 $EMPTY); do BAR="${BAR}${DIM}●${RESET}"; done
+for i in $(seq 1 "$FILLED"); do BAR="${BAR}${BAR_COLOR}●${RESET}"; done
+for i in $(seq 1 "$EMPTY"); do BAR="${BAR}${DIM}●${RESET}"; done
 
 # ── Duration ──────────────────────────────────────────────────
 DUR=$(fmt_dur "$DURATION_MS")
@@ -222,10 +223,11 @@ L2="${BAR} ${DIM}${PCT}%${RESET}${SEP}${YELLOW}${COST_FMT}${RESET}${SEP}${DIM}${
 mk_bar() {
   local pct=$1 color=$2
   local w=10
-  local filled=$(( pct * w / 100 )) empty=$(( w - filled ))
+  local filled=$(( pct * w / 100 ))
+  local empty=$(( w - filled ))
   local bar=""
-  for i in $(seq 1 $filled); do bar="${bar}${color}●${RESET}"; done
-  for i in $(seq 1 $empty);  do bar="${bar}${DIM}●${RESET}"; done
+  for i in $(seq 1 "$filled"); do bar="${bar}${color}●${RESET}"; done
+  for i in $(seq 1 "$empty");  do bar="${bar}${DIM}●${RESET}"; done
   echo "$bar"
 }
 

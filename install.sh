@@ -33,7 +33,9 @@ if command -v apt-get &>/dev/null; then
         zsh-autosuggestions \
         zsh-syntax-highlighting \
         eza \
-        bat
+        bat \
+        jq \
+        bc
 fi
 
 if ! command -v starship &>/dev/null; then
