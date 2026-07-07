@@ -16,7 +16,7 @@ Personal configuration files for Zsh and Git, optimized for WSL (Windows Subsyst
 ## Setup
 
 ```bash
-git clone https://github.com/<your-username>/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
+git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
 ```
 
 `install.sh` will:
