@@ -4,10 +4,12 @@ Personal configuration files for Zsh and Git, optimized for WSL (Windows Subsyst
 
 ## Contents
 
-| File             | Symlink target | Purpose                  |
-|------------------|----------------|--------------------------|
-| `zsh/.zshrc`     | `~/.zshrc`     | Zsh shell configuration  |
-| `git/.gitconfig` | `~/.gitconfig` | Git global configuration |
+| File                     | Symlink target                | Purpose                  |
+|--------------------------|--------------------------------|--------------------------|
+| `zsh/.zshrc`             | `~/.zshrc`                     | Zsh shell configuration  |
+| `git/.gitconfig`         | `~/.gitconfig`                 | Git global configuration |
+| `claude/settings.json`   | `~/.claude/settings.json`      | Claude Code settings     |
+| `claude/statusline.sh`   | `~/.claude/statusline.sh`      | Claude Code status line  |
 
 ---
 
@@ -18,10 +20,12 @@ git clone https://github.com/<your-username>/dotfiles.git ~/dotfiles && ~/dotfil
 ```
 
 `install.sh` will:
-1. Install apt packages (`zsh`, `eza`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`)
-2. Install Starship, zoxide, and nvm (skipped if already present)
-3. Symlink `~/.zshrc`, `~/.gitconfig`, and `~/.claude/` configs (backs up any existing files with `.bak`)
-4. Set zsh as the default shell
+1. Install apt packages (`git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`)
+2. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
+3. Install Emacs via snap (skipped if already present)
+4. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
+5. Symlink `~/.zshrc`, `~/.gitconfig`, and `~/.claude/` configs (backs up any existing files with `.bak`)
+6. Set zsh as the default shell
 
 > **Note:** Edit `git/.gitconfig` to replace `name` and `email` under `[user]` with your own before running.
 
@@ -79,6 +83,17 @@ git clone https://github.com/<your-username>/dotfiles.git ~/dotfiles && ~/dotfil
 
 ---
 
+### Claude Code (`claude/`)
+
+| File            | Purpose                                                              |
+|-----------------|------------------------------------------------------------------------|
+| `settings.json` | Enables the `codex@openai-codex` plugin, fullscreen TUI, and points `statusLine` at `statusline.sh` |
+| `statusline.sh` | Custom status line: model, repo/branch, git stats, context usage bar, cost, duration, rate limits, token/cache stats |
+
+`statusline.sh` requires `jq` and `bc` (installed by `install.sh`).
+
+---
+
 ## Requirements
 
-Ubuntu/Debian (WSL or native). The install script handles all package installation automatically.
+Ubuntu/Debian (WSL or native) with `snap` available (used to install Emacs). The install script handles all package installation automatically.

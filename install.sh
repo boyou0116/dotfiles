@@ -29,13 +29,40 @@ if command -v apt-get &>/dev/null; then
     info "Installing apt packages..."
     sudo apt-get update -qq
     sudo apt-get install -y -qq \
+        git \
         zsh \
         zsh-autosuggestions \
         zsh-syntax-highlighting \
-        eza \
         bat \
         jq \
         bc
+
+    if ! command -v eza &>/dev/null; then
+        if apt-cache show eza &>/dev/null; then
+            info "Installing eza..."
+            sudo apt-get install -y -qq eza
+        else
+            info "eza not in default apt repo, adding eza's apt repo..."
+            sudo apt-get install -y -qq gpg
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://raw.githubusercontent.com/eza-community/eza/main/deb.asc \
+                | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+            echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" \
+                | sudo tee /etc/apt/sources.list.d/gierens.list > /dev/null
+            sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq eza
+        fi
+    else
+        info "eza already installed, skipping."
+    fi
+fi
+
+if ! command -v emacs &>/dev/null; then
+    info "Installing Emacs via snap..."
+    sudo snap install emacs --classic
+else
+    info "Emacs already installed, skipping."
 fi
 
 if ! command -v starship &>/dev/null; then
@@ -57,6 +84,13 @@ if [[ ! -d "$HOME/.nvm" ]]; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 else
     info "nvm already installed, skipping."
+fi
+
+if ! command -v claude &>/dev/null; then
+    info "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+else
+    info "Claude Code already installed, skipping."
 fi
 
 # ── Symlinks ─────────────────────────────────────────────────────────────────
