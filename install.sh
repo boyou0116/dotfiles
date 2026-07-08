@@ -216,6 +216,49 @@ if [[ -d "$DOTFILES_DIR/claude" ]]; then
     done
 fi
 
+# ── GitHub SSH (push access for this repo) ───────────────────────────────────
+
+SSH_KEY="$HOME/.ssh/id_ed25519"
+mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+
+if [[ ! -f "$SSH_KEY" ]]; then
+    info "Generating SSH key..."
+    ssh-keygen -t ed25519 -f "$SSH_KEY" -N "" -C "$USER@$(hostname)"
+fi
+
+# Pre-trust GitHub's host key so the first connection doesn't prompt
+if ! grep -q "^github.com" "$HOME/.ssh/known_hosts" 2>/dev/null; then
+    ssh-keyscan -t ed25519 github.com >> "$HOME/.ssh/known_hosts" 2>/dev/null
+fi
+
+github_ssh_ok() {
+    ssh -o BatchMode=yes -o ConnectTimeout=10 -T git@github.com 2>&1 \
+        | grep -q "successfully authenticated"
+}
+
+if github_ssh_ok; then
+    info "GitHub SSH authentication works."
+else
+    warn "This machine's SSH key is not registered with GitHub yet."
+    echo ""
+    cat "${SSH_KEY}.pub"
+    echo ""
+    echo "Add the key above at https://github.com/settings/keys, then press Enter."
+    read -rp "(Enter to continue; skipping leaves the remote on HTTPS) " || true
+fi
+
+# Switch this repo's remote to SSH once authentication works
+REMOTE_URL="$(git -C "$DOTFILES_DIR" remote get-url origin 2>/dev/null || true)"
+if [[ "$REMOTE_URL" == https://github.com/* ]]; then
+    if github_ssh_ok; then
+        info "Switching dotfiles remote to SSH..."
+        git -C "$DOTFILES_DIR" remote set-url origin \
+            "${REMOTE_URL/https:\/\/github.com\//git@github.com:}"
+    else
+        warn "GitHub SSH still not working; leaving remote on HTTPS."
+    fi
+fi
+
 # ── Default shell ─────────────────────────────────────────────────────────────
 
 ZSH_PATH="$(command -v zsh 2>/dev/null || true)"
