@@ -112,14 +112,22 @@ fi
 
 if ! command -v zoxide &>/dev/null; then
     info "Installing zoxide..."
-    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+    if apt-cache show zoxide &>/dev/null; then
+        sudo apt-get install -y zoxide
+    else
+        # Fallback for distros without the package (installer fetches from
+        # raw.githubusercontent.com, which rate-limits aggressively)
+        curl -sS --retry 3 https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+    fi
 else
     info "zoxide already installed, skipping."
 fi
 
 if [[ ! -d "$HOME/.nvm" ]]; then
     info "Installing nvm..."
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    # Same as nvm's install.sh but without fetching the installer from
+    # rate-limited raw.githubusercontent.com (shell setup is in .zshrc)
+    git clone --depth 1 --branch v0.39.7 https://github.com/nvm-sh/nvm.git "$HOME/.nvm"
 else
     info "nvm already installed, skipping."
 fi
