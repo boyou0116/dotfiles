@@ -132,7 +132,9 @@ else
     info "nvm already installed, skipping."
 fi
 
-if ! command -v claude &>/dev/null; then
+# Check the install path too: ~/.local/bin may not be on PATH yet in the
+# session that runs this script (Ubuntu adds it at login, only if it exists)
+if ! command -v claude &>/dev/null && [[ ! -x "$HOME/.local/bin/claude" ]]; then
     info "Installing Claude Code (the installer is quiet while downloading ~tens of MB; this can take a minute)..."
     curl -fsSL https://claude.ai/install.sh | bash
 else
