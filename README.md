@@ -20,12 +20,13 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 ```
 
 `install.sh` will:
-1. Install apt packages (`curl`, `git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`)
+1. Install apt packages (`curl`, `git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`, `fontconfig`, `xz-utils`)
 2. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
 3. Install Emacs via snap (skipped if already present; aborts with an error if snap/systemd is unavailable)
 4. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
-5. Symlink `~/.zshrc`, `~/.gitconfig`, and `~/.claude/` configs (backs up any existing files with `.bak`)
-6. Set zsh as the default shell
+5. Install [IntoneMono Nerd Font](https://www.nerdfonts.com/) — provides the icons used by `eza --icons` and Starship. On WSL it is installed into Windows per-user fonts via PowerShell (no admin needed); on native Linux into `~/.local/share/fonts`. Afterwards, select **IntoneMono Nerd Font** in your terminal's settings manually
+6. Symlink `~/.zshrc`, `~/.gitconfig`, and `~/.claude/` configs (backs up any existing files with `.bak`)
+7. Set zsh as the default shell
 
 > **Note:** Edit `git/.gitconfig` to replace `name` and `email` under `[user]` with your own before running.
 

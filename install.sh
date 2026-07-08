@@ -36,7 +36,9 @@ if command -v apt-get &>/dev/null; then
         zsh-syntax-highlighting \
         bat \
         jq \
-        bc
+        bc \
+        fontconfig \
+        xz-utils
 
     if ! command -v eza &>/dev/null; then
         if apt-cache show eza &>/dev/null; then
@@ -97,6 +99,70 @@ if ! command -v claude &>/dev/null; then
     curl -fsSL https://claude.ai/install.sh | bash
 else
     info "Claude Code already installed, skipping."
+fi
+
+# ── Nerd Font (IntoneMono, provides terminal icons for eza/Starship) ─────────
+
+FONT_NAME="IntoneMono"
+FONT_ASSET="IntelOneMono.tar.xz"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$FONT_ASSET"
+
+is_wsl() { [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version; }
+
+download_font() {
+    FONT_TMP="$(mktemp -d)"
+    info "Downloading $FONT_NAME Nerd Font..."
+    curl -fsSL -o "$FONT_TMP/$FONT_ASSET" "$FONT_URL"
+    tar -xf "$FONT_TMP/$FONT_ASSET" -C "$FONT_TMP"
+}
+
+if is_wsl; then
+    # Windows Terminal renders with Windows-side fonts, so install there (per-user, no admin)
+    POWERSHELL="$(command -v powershell.exe || true)"
+    [[ -z "$POWERSHELL" && -x /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe ]] \
+        && POWERSHELL=/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
+    if [[ -z "$POWERSHELL" ]]; then
+        error "powershell.exe not found; cannot install the font into Windows."
+        exit 1
+    fi
+    WIN_FONT_DIR="$(wslpath "$("$POWERSHELL" -NoProfile -Command 'Write-Output "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"' | tr -d '\r')")"
+    if compgen -G "$WIN_FONT_DIR/${FONT_NAME}*" > /dev/null; then
+        info "$FONT_NAME Nerd Font already installed in Windows, skipping."
+    else
+        download_font
+        info "Installing $FONT_NAME Nerd Font into Windows user fonts..."
+        cat > "$FONT_TMP/install-font.ps1" <<'PSEOF'
+param([string]$Src)
+$dst = "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"
+New-Item -ItemType Directory -Force -Path $dst | Out-Null
+$reg = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts'
+if (-not (Test-Path $reg)) { New-Item -Path $reg -Force | Out-Null }
+Get-ChildItem -Path (Join-Path $Src '*.ttf') | ForEach-Object {
+    Copy-Item -Path $_.FullName -Destination $dst -Force
+    New-ItemProperty -Path $reg -Name ($_.BaseName + ' (TrueType)') `
+        -Value (Join-Path $dst $_.Name) -PropertyType String -Force | Out-Null
+}
+PSEOF
+        # run from /mnt/c so powershell.exe doesn't fall back from a UNC working directory
+        (cd /mnt/c && "$POWERSHELL" -NoProfile -ExecutionPolicy Bypass \
+            -File "$(wslpath -w "$FONT_TMP/install-font.ps1")" \
+            -Src "$(wslpath -w "$FONT_TMP")")
+        rm -rf "$FONT_TMP"
+        info "Font installed. Select 'IntoneMono Nerd Font' in Windows Terminal → Settings → Appearance."
+    fi
+else
+    FONT_DIR="$HOME/.local/share/fonts/$FONT_NAME"
+    if compgen -G "$FONT_DIR/${FONT_NAME}*" > /dev/null; then
+        info "$FONT_NAME Nerd Font already installed, skipping."
+    else
+        download_font
+        info "Installing $FONT_NAME Nerd Font to $FONT_DIR..."
+        mkdir -p "$FONT_DIR"
+        cp "$FONT_TMP"/*.ttf "$FONT_DIR/"
+        fc-cache -f "$FONT_DIR"
+        rm -rf "$FONT_TMP"
+        info "Font installed. Select 'IntoneMono Nerd Font' in your terminal's profile settings."
+    fi
 fi
 
 # ── Symlinks ─────────────────────────────────────────────────────────────────
