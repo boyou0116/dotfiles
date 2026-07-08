@@ -125,6 +125,7 @@ if is_wsl; then
         error "powershell.exe not found; cannot install the font into Windows."
         exit 1
     fi
+    # shellcheck disable=SC2016  # $env:LOCALAPPDATA is PowerShell syntax, must reach powershell.exe unexpanded
     WIN_FONT_DIR="$(wslpath "$("$POWERSHELL" -NoProfile -Command 'Write-Output "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"' | tr -d '\r')")"
     if compgen -G "$WIN_FONT_DIR/${FONT_NAME}*" > /dev/null; then
         info "$FONT_NAME Nerd Font already installed in Windows, skipping."
@@ -170,6 +171,7 @@ fi
 info "Creating symlinks..."
 link "$DOTFILES_DIR/zsh/.zshrc"        "$HOME/.zshrc"
 link "$DOTFILES_DIR/git/.gitconfig"    "$HOME/.gitconfig"
+link "$DOTFILES_DIR/emacs/init.el"     "$HOME/.emacs.d/init.el"
 
 if [[ -d "$DOTFILES_DIR/claude" ]]; then
     for f in "$DOTFILES_DIR/claude/"*; do
