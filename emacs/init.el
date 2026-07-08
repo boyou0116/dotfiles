@@ -28,7 +28,9 @@
 
 
 ;;; UI
-;; Font: IntoneMono Nerd Font (installed by install.sh)
+;; Terminal Emacs inherits the terminal's font; GUI frames must be told
+;; explicitly (IntoneMono is installed by install.sh)
+(add-to-list 'default-frame-alist '(font . "IntoneMono Nerd Font Mono-11"))
 (menu-bar-mode -1)
 
 (when (display-graphic-p)

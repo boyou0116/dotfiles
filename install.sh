@@ -185,6 +185,23 @@ else
     fi
 fi
 
+# Symbols Nerd Font: icon glyphs for GUI Emacs (nerd-icons/doom-modeline).
+# GUI Emacs ignores the terminal font, so it needs this even though
+# IntoneMono already bundles the same glyphs for terminal use.
+if fc-list | grep -qi "Symbols Nerd Font"; then
+    info "Symbols Nerd Font already installed, skipping."
+else
+    SYM_DIR="$HOME/.local/share/fonts/NerdFontsSymbolsOnly"
+    SYM_TMP="$(mktemp -d)"
+    info "Downloading Symbols Nerd Font (icons for GUI Emacs)..."
+    curl -fsSL -o "$SYM_TMP/NerdFontsSymbolsOnly.tar.xz" \
+        "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.tar.xz"
+    mkdir -p "$SYM_DIR"
+    tar -xf "$SYM_TMP/NerdFontsSymbolsOnly.tar.xz" -C "$SYM_DIR"
+    fc-cache -f "$SYM_DIR"
+    rm -rf "$SYM_TMP"
+fi
+
 # ── Symlinks ─────────────────────────────────────────────────────────────────
 
 info "Creating symlinks..."
