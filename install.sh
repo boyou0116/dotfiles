@@ -68,8 +68,9 @@ if command -v apt-get &>/dev/null; then
             info "eza not in default apt repo, adding eza's apt repo..."
             sudo apt-get install -y gpg
             sudo mkdir -p /etc/apt/keyrings
-            curl -fsSL --retry 3 https://raw.githubusercontent.com/eza-community/eza/main/deb.asc \
-                | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+            # Key is vendored in the repo: raw.githubusercontent.com (its
+            # upstream source) aggressively rate-limits and broke installs
+            sudo gpg --dearmor --yes -o /etc/apt/keyrings/gierens.gpg "$DOTFILES_DIR/apt/gierens.asc"
             echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" \
                 | sudo tee /etc/apt/sources.list.d/gierens.list > /dev/null
             sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
