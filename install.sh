@@ -162,7 +162,8 @@ else
         cp "$FONT_TMP"/*.ttf "$FONT_DIR/"
         fc-cache -f "$FONT_DIR"
         rm -rf "$FONT_TMP"
-        info "Font installed. Select 'IntoneMono Nerd Font' in your terminal's profile settings."
+        info "Font installed. To apply: close ALL terminal windows first (GNOME Terminal shares one process),"
+        info "then reopen and select 'IntoneMono Nerd Font Mono' in the profile settings (search 'Intone', no space)."
     fi
 fi
 
