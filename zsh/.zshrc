@@ -50,6 +50,15 @@ if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
   source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
+# fzf: fuzzy Ctrl-R history search, Ctrl-T file picker, Alt-C cd
+# (paths used by the Ubuntu/Debian fzf package)
+if [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+fi
+if [ -f /usr/share/doc/fzf/examples/completion.zsh ]; then
+  source /usr/share/doc/fzf/examples/completion.zsh
+fi
+
 # =========================
 # PATH Fix (WSL)
 # =========================

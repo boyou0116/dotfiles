@@ -40,7 +40,16 @@ if command -v apt-get &>/dev/null; then
         bc \
         fontconfig \
         fonts-noto-core \
-        xz-utils
+        xz-utils \
+        build-essential \
+        gdb \
+        python3-venv \
+        unzip \
+        zip \
+        shellcheck \
+        fzf \
+        htop \
+        tree
 
     # Tools used by Emacs (init.el): LSP servers and search backends
     info "Installing Emacs external tools..."
