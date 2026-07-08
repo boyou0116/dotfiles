@@ -34,6 +34,7 @@ if command -v apt-get &>/dev/null; then
         zsh \
         zsh-autosuggestions \
         zsh-syntax-highlighting \
+        tmux \
         bat \
         jq \
         bc \
