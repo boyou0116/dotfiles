@@ -253,7 +253,9 @@ if ! grep -q "^github.com" "$HOME/.ssh/known_hosts" 2>/dev/null; then
 fi
 
 github_ssh_ok() {
-    ssh -o BatchMode=yes -o ConnectTimeout=10 -T git@github.com 2>&1 \
+    # GitHub exits 1 even on successful auth (no shell access), which
+    # pipefail would turn into a false negative — judge by output only
+    { ssh -o BatchMode=yes -o ConnectTimeout=10 -T git@github.com 2>&1 || true; } \
         | grep -q "successfully authenticated"
 }
 
