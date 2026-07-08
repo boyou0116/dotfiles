@@ -106,6 +106,10 @@
    ("C-c ;" . embark-dwim)
    ("C-h B" . embark-bindings)))
 
+(use-package embark-consult
+  :after (embark consult)
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
 (use-package magit
   :bind ("C-x g" . magit-status))
 
@@ -144,6 +148,9 @@
 
 
 ;;; Markdown
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . gfm-mode))
+
 (use-package grip-mode
   :ensure t
   :bind (:map markdown-mode-command-map
