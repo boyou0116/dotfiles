@@ -83,10 +83,16 @@ if command -v apt-get &>/dev/null; then
 fi
 
 # grip renders Markdown previews for Emacs grip-mode; the apt package named
-# "grip" is an unrelated CD ripper, so install from PyPI instead
+# "grip" is an unrelated CD ripper, so install from PyPI instead. Prefer pipx:
+# PEP 668 (Ubuntu 24.04+) makes pip refuse to touch the system Python.
 if ! command -v grip &>/dev/null && [[ ! -x "$HOME/.local/bin/grip" ]]; then
     info "Installing grip (Markdown preview backend)..."
-    pip3 install --user grip
+    if apt-cache show pipx &>/dev/null; then
+        sudo apt-get install -y pipx
+        pipx install grip
+    else
+        pip3 install --user grip
+    fi
 else
     info "grip already installed, skipping."
 fi

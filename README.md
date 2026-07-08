@@ -30,7 +30,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 
 `install.sh` will:
 1. Install apt packages (`curl`, `git`, `zsh`, `tmux`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`, `fontconfig`, `fonts-noto-core`, `xz-utils`, `build-essential`, `gdb`, `python3-venv`, `unzip`, `zip`, `shellcheck`, `fzf`, `htop`, `tree`)
-2. Install the external tools Emacs needs (`ripgrep`, `fd-find`, `clangd`, `python3-pylsp` via apt; `grip` via PyPI — the apt package named `grip` is an unrelated CD ripper)
+2. Install the external tools Emacs needs (`ripgrep`, `fd-find`, `clangd`, `python3-pylsp` via apt; `grip` from PyPI via pipx — the apt package named `grip` is an unrelated CD ripper, and PEP 668 (Ubuntu 24.04+) forbids bare `pip install`)
 3. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
 4. Install Emacs via snap (skipped if already present; aborts with an error if snap/systemd is unavailable)
 5. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
