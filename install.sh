@@ -38,6 +38,7 @@ if command -v apt-get &>/dev/null; then
         jq \
         bc \
         fontconfig \
+        fonts-noto-core \
         xz-utils
 
     # Tools used by Emacs (init.el): LSP servers and search backends
