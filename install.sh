@@ -133,7 +133,7 @@ else
 fi
 
 if ! command -v claude &>/dev/null; then
-    info "Installing Claude Code..."
+    info "Installing Claude Code (the installer is quiet while downloading ~tens of MB; this can take a minute)..."
     curl -fsSL https://claude.ai/install.sh | bash
 else
     info "Claude Code already installed, skipping."
