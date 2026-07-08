@@ -22,7 +22,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 `install.sh` will:
 1. Install apt packages (`curl`, `git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`)
 2. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
-3. Install Emacs via snap (skipped if already present)
+3. Install Emacs via snap (skipped if already present; aborts with an error if snap/systemd is unavailable)
 4. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
 5. Symlink `~/.zshrc`, `~/.gitconfig`, and `~/.claude/` configs (backs up any existing files with `.bak`)
 6. Set zsh as the default shell
@@ -96,4 +96,4 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 
 ## Requirements
 
-Ubuntu/Debian (WSL or native) with `snap` available (used to install Emacs). The install script handles all package installation automatically.
+Ubuntu/Debian (WSL or native) with `snap` available (used to install Emacs — requires a running systemd; on WSL set `systemd=true` in `/etc/wsl.conf`). The install script handles all package installation automatically.

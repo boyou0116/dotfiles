@@ -14,5 +14,6 @@
       }
     }
   },
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "model": "fable"
 }

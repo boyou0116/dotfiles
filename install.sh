@@ -60,6 +60,11 @@ if command -v apt-get &>/dev/null; then
 fi
 
 if ! command -v emacs &>/dev/null; then
+    # snap needs a running systemd (not the case on WSL without systemd=true)
+    if ! command -v snap &>/dev/null || [[ ! -d /run/systemd/system ]]; then
+        error "snap is unavailable (is systemd running?). Enable systemd (WSL: set systemd=true in /etc/wsl.conf) and re-run."
+        exit 1
+    fi
     info "Installing Emacs via snap..."
     sudo snap install emacs --classic
 else
@@ -109,9 +114,11 @@ fi
 # ── Default shell ─────────────────────────────────────────────────────────────
 
 ZSH_PATH="$(command -v zsh 2>/dev/null || true)"
-if [[ -n "$ZSH_PATH" && "$SHELL" != "$ZSH_PATH" ]]; then
+CURRENT_SHELL="$(getent passwd "$USER" | cut -d: -f7)"
+if [[ -n "$ZSH_PATH" && "$CURRENT_SHELL" != "$ZSH_PATH" ]]; then
     info "Changing default shell to zsh..."
-    chsh -s "$ZSH_PATH"
+    # sudo chsh: reuses cached sudo credentials instead of prompting for a password
+    sudo chsh -s "$ZSH_PATH" "$USER"
 else
     info "Default shell is already zsh, skipping."
 fi
