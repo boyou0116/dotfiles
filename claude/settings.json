@@ -15,5 +15,6 @@
     }
   },
   "tui": "fullscreen",
-  "model": "fable"
+  "theme": "dark",
+  "model": "claude-fable-5[1m]"
 }
