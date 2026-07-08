@@ -40,6 +40,15 @@ if command -v apt-get &>/dev/null; then
         fontconfig \
         xz-utils
 
+    # Tools used by Emacs (init.el): LSP servers and search backends
+    info "Installing Emacs external tools..."
+    sudo apt-get install -y -qq \
+        ripgrep \
+        fd-find \
+        clangd \
+        python3-pylsp \
+        python3-pip
+
     if ! command -v eza &>/dev/null; then
         if apt-cache show eza &>/dev/null; then
             info "Installing eza..."
@@ -59,6 +68,15 @@ if command -v apt-get &>/dev/null; then
     else
         info "eza already installed, skipping."
     fi
+fi
+
+# grip renders Markdown previews for Emacs grip-mode; the apt package named
+# "grip" is an unrelated CD ripper, so install from PyPI instead
+if ! command -v grip &>/dev/null && [[ ! -x "$HOME/.local/bin/grip" ]]; then
+    info "Installing grip (Markdown preview backend)..."
+    pip3 install --user grip
+else
+    info "grip already installed, skipping."
 fi
 
 if ! command -v emacs &>/dev/null; then
