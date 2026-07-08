@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal configuration files for Zsh and Git, optimized for WSL (Windows Subsystem for Linux).
+Personal configuration files for Zsh, Git, Emacs, and Claude Code. Works on native Ubuntu and WSL (Windows Subsystem for Linux).
 
 ## Contents
 
@@ -16,18 +16,29 @@ Personal configuration files for Zsh and Git, optimized for WSL (Windows Subsyst
 
 ## Setup
 
+On a fresh machine, install `git` first (Ubuntu Desktop doesn't ship it):
+
+```bash
+sudo apt update && sudo apt install -y git
+```
+
+Then:
+
 ```bash
 git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
 ```
 
 `install.sh` will:
-1. Install apt packages (`curl`, `git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`, `fontconfig`, `xz-utils`)
-2. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
-3. Install Emacs via snap (skipped if already present; aborts with an error if snap/systemd is unavailable)
-4. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
-5. Install [IntoneMono Nerd Font](https://www.nerdfonts.com/) — provides the icons used by `eza --icons` and Starship. On WSL it is installed into Windows per-user fonts via PowerShell (no admin needed); on native Linux into `~/.local/share/fonts`. Afterwards, select **IntoneMono Nerd Font** in your terminal's settings manually
-6. Symlink `~/.zshrc`, `~/.gitconfig`, `~/.emacs.d/init.el`, and `~/.claude/` configs (backs up any existing files with `.bak`)
-7. Set zsh as the default shell
+1. Install apt packages (`curl`, `git`, `zsh`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`, `fontconfig`, `fonts-noto-core`, `xz-utils`)
+2. Install the external tools Emacs needs (`ripgrep`, `fd-find`, `clangd`, `python3-pylsp` via apt; `grip` via PyPI — the apt package named `grip` is an unrelated CD ripper)
+3. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
+4. Install Emacs via snap (skipped if already present; aborts with an error if snap/systemd is unavailable)
+5. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
+6. Install [IntoneMono Nerd Font](https://www.nerdfonts.com/) — provides the icons used by `eza --icons` and Starship. On WSL it is installed into Windows per-user fonts via PowerShell (no admin needed); on native Linux into `~/.local/share/fonts`. Afterwards, close **all** terminal windows (GNOME Terminal shares one process), reopen, and select **IntoneMono Nerd Font Mono** in the terminal's profile settings (search "Intone", no space)
+7. Install Symbols Nerd Font — icon glyphs for GUI Emacs, which ignores the terminal font (`init.el` sets its own frame font)
+8. Symlink `~/.zshrc`, `~/.gitconfig`, `~/.emacs.d/init.el`, and `~/.claude/` configs (backs up any existing files with `.bak`)
+9. Set up GitHub SSH: generate an ed25519 key if missing, print the public key for you to add at [github.com/settings/keys](https://github.com/settings/keys), and switch this repo's remote from HTTPS to SSH once authentication works (press Enter to skip — the remote then stays on HTTPS and you can re-run later)
+10. Set zsh as the default shell
 
 > **Note:** Edit `git/.gitconfig` to replace `name` and `email` under `[user]` with your own before running.
 
@@ -87,7 +98,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 
 ### Emacs (`emacs/init.el`)
 
-- Packages auto-install on first launch via `package.el` + `use-package` (`use-package-always-ensure`)
+- Packages auto-install on first launch via `package.el` + `use-package` (`use-package-always-ensure`) — the first launch takes a few minutes and prints compile warnings; that's normal. A transient `compat-31` activation error on the very first run heals itself on the next launch
 - Completion stack: vertico + orderless + marginalia + consult + embark, corfu (+ corfu-terminal in TTY) with cape
 - LSP via eglot for C/C++ (clangd with `--query-driver`), Python, Go, and Haskell
 - magit, avy, which-key, windmove, recentf/savehist persistence

@@ -58,7 +58,7 @@ if command -v apt-get &>/dev/null; then
             info "eza not in default apt repo, adding eza's apt repo..."
             sudo apt-get install -y -qq gpg
             sudo mkdir -p /etc/apt/keyrings
-            curl -fsSL https://raw.githubusercontent.com/eza-community/eza/main/deb.asc \
+            curl -fsSL --retry 3 https://raw.githubusercontent.com/eza-community/eza/main/deb.asc \
                 | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
             echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" \
                 | sudo tee /etc/apt/sources.list.d/gierens.list > /dev/null
@@ -131,7 +131,7 @@ is_wsl() { [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version; 
 download_font() {
     FONT_TMP="$(mktemp -d)"
     info "Downloading $FONT_NAME Nerd Font..."
-    curl -fsSL -o "$FONT_TMP/$FONT_ASSET" "$FONT_URL"
+    curl -fsSL --retry 3 -o "$FONT_TMP/$FONT_ASSET" "$FONT_URL"
     tar -xf "$FONT_TMP/$FONT_ASSET" -C "$FONT_TMP"
 }
 
@@ -195,7 +195,7 @@ else
     SYM_DIR="$HOME/.local/share/fonts/NerdFontsSymbolsOnly"
     SYM_TMP="$(mktemp -d)"
     info "Downloading Symbols Nerd Font (icons for GUI Emacs)..."
-    curl -fsSL -o "$SYM_TMP/NerdFontsSymbolsOnly.tar.xz" \
+    curl -fsSL --retry 3 -o "$SYM_TMP/NerdFontsSymbolsOnly.tar.xz" \
         "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.tar.xz"
     mkdir -p "$SYM_DIR"
     tar -xf "$SYM_TMP/NerdFontsSymbolsOnly.tar.xz" -C "$SYM_DIR"
