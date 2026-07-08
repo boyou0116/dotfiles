@@ -295,4 +295,4 @@ else
 fi
 
 echo ""
-info "Done. Open a new terminal (or run: exec zsh) to apply changes."
+info "Done. Log out and back in to apply the default shell change (or run: exec zsh to try zsh now)."
