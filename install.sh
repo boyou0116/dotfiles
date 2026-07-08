@@ -27,8 +27,8 @@ link() {
 
 if command -v apt-get &>/dev/null; then
     info "Installing apt packages..."
-    sudo apt-get update -qq
-    sudo apt-get install -y -qq \
+    sudo apt-get update -q
+    sudo apt-get install -y \
         curl \
         git \
         zsh \
@@ -53,7 +53,7 @@ if command -v apt-get &>/dev/null; then
 
     # Tools used by Emacs (init.el): LSP servers and search backends
     info "Installing Emacs external tools..."
-    sudo apt-get install -y -qq \
+    sudo apt-get install -y \
         ripgrep \
         fd-find \
         clangd \
@@ -63,18 +63,18 @@ if command -v apt-get &>/dev/null; then
     if ! command -v eza &>/dev/null; then
         if apt-cache show eza &>/dev/null; then
             info "Installing eza..."
-            sudo apt-get install -y -qq eza
+            sudo apt-get install -y eza
         else
             info "eza not in default apt repo, adding eza's apt repo..."
-            sudo apt-get install -y -qq gpg
+            sudo apt-get install -y gpg
             sudo mkdir -p /etc/apt/keyrings
             curl -fsSL --retry 3 https://raw.githubusercontent.com/eza-community/eza/main/deb.asc \
                 | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
             echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" \
                 | sudo tee /etc/apt/sources.list.d/gierens.list > /dev/null
             sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq eza
+            sudo apt-get update -q
+            sudo apt-get install -y eza
         fi
     else
         info "eza already installed, skipping."
