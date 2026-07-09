@@ -208,8 +208,10 @@ else
         cp "$FONT_TMP"/*.ttf "$FONT_DIR/"
         fc-cache -f "$FONT_DIR"
         rm -rf "$FONT_TMP"
-        info "Font installed. To apply: close ALL terminal windows first (GNOME Terminal shares one process),"
-        info "then reopen and select 'IntoneMono Nerd Font Mono' in the profile settings (search 'Intone', no space)."
+        info "Font installed. Select 'IntoneMono Nerd Font Mono' in your terminal (search 'Intone', no space):"
+        info "  - GNOME Terminal (Ubuntu <= 24.04): close ALL windows first (it shares one process),"
+        info "    then reopen and pick the font in the profile settings."
+        info "  - Ptyxis (default since Ubuntu 25.10): Preferences -> turn off 'Use System Font' -> pick the font."
     fi
 fi
 
