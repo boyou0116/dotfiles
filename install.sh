@@ -242,8 +242,8 @@ if fc-list | grep -qi "Sarasa Mono TC Nerd Font"; then
 else
     SARASA_DIR="$HOME/.local/share/fonts/SarasaMonoTCNerdFont"
     SARASA_TMP="$(mktemp -d)"
-    info "Downloading Sarasa Mono TC Nerd Font (2:1 CJK font for GUI Emacs)..."
-    curl -fsSL --retry 3 -o "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" \
+    info "Downloading Sarasa Mono TC Nerd Font (2:1 CJK font for GUI Emacs, ~143 MB)..."
+    curl -fL --retry 3 --progress-bar -o "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" \
         "https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/latest/download/sarasa-mono-tc-nerd-font.zip"
     mkdir -p "$SARASA_DIR"
     unzip -qo "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" -d "$SARASA_DIR"
