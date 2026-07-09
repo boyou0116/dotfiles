@@ -232,6 +232,25 @@ else
     rm -rf "$SYM_TMP"
 fi
 
+# Sarasa Mono TC: CJK font for GUI Emacs. init.el maps CJK scripts to it and
+# rescales it so one CJK char spans exactly two IntoneMono columns, keeping
+# mixed Chinese/English text (e.g. org tables) aligned. Terminal Emacs doesn't
+# need it — the terminal grid already forces CJK into 2 cells. Always
+# installed Linux-side: GUI Emacs reads Linux fonts even under WSLg.
+if fc-list | grep -qi "Sarasa Mono TC Nerd Font"; then
+    info "Sarasa Mono TC Nerd Font already installed, skipping."
+else
+    SARASA_DIR="$HOME/.local/share/fonts/SarasaMonoTCNerdFont"
+    SARASA_TMP="$(mktemp -d)"
+    info "Downloading Sarasa Mono TC Nerd Font (2:1 CJK font for GUI Emacs)..."
+    curl -fsSL --retry 3 -o "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" \
+        "https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/latest/download/sarasa-mono-tc-nerd-font.zip"
+    mkdir -p "$SARASA_DIR"
+    unzip -qo "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" -d "$SARASA_DIR"
+    fc-cache -f "$SARASA_DIR"
+    rm -rf "$SARASA_TMP"
+fi
+
 # ── Symlinks ─────────────────────────────────────────────────────────────────
 
 info "Creating symlinks..."

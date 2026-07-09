@@ -33,7 +33,16 @@
 (add-to-list 'default-frame-alist '(font . "IntoneMono Nerd Font Mono-13"))
 (menu-bar-mode -1)
 
+;; CJK in GUI frames: Sarasa Mono TC (installed by install.sh), rescaled so
+;; one CJK char spans exactly two IntoneMono columns and mixed Chinese/English
+;; text (org tables) stays aligned. IntoneMono's advance is 0.614em vs Sarasa's
+;; 1.0em CJK, hence 2 x 0.614 = 1.228. Terminal frames need none of this: the
+;; terminal grid already forces CJK into two cells.
+(add-to-list 'face-font-rescale-alist '("Sarasa Mono TC Nerd Font" . 1.228))
+
 (when (display-graphic-p)
+  (dolist (script '(han cjk-misc kana bopomofo))
+    (set-fontset-font t script (font-spec :family "Sarasa Mono TC Nerd Font")))
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (use-package kind-icon
