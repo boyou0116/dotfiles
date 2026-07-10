@@ -84,6 +84,21 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # =========================
+# Ghostty
+# =========================
+
+# Ubuntu's Ghostty launcher (D-Bus service and .desktop file) passes
+# --shell-integration-features=ssh-env on the command line, which overrides
+# the config file's no-cursor and re-enables the integration's bar cursor at
+# the prompt. Strip the cursor feature here: the integration only reads
+# GHOSTTY_SHELL_FEATURES at the first prompt, after .zshrc has run.
+if [[ -n "$GHOSTTY_SHELL_FEATURES" ]]; then
+  _ghostty_features=(${(s:,:)GHOSTTY_SHELL_FEATURES})
+  export GHOSTTY_SHELL_FEATURES=${(j:,:)_ghostty_features:#cursor*}
+  unset _ghostty_features
+fi
+
+# =========================
 # Prompt
 # =========================
 

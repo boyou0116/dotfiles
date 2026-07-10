@@ -1,0 +1,11 @@
+# Ghostty configuration (https://ghostty.org/docs/config)
+
+# Nerd Font installed by install.sh — provides the icons used by
+# eza --icons and Starship
+font-family = IntoneMono Nerd Font Mono
+font-size = 14
+
+cursor-style = block
+# Shell integration forces a bar cursor at the prompt by default, which
+# would override cursor-style there — keep the rest, drop the cursor part
+shell-integration-features = no-cursor

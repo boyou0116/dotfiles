@@ -80,6 +80,19 @@ if command -v apt-get &>/dev/null; then
     else
         info "eza already installed, skipping."
     fi
+
+    # Ghostty terminal: first packaged in Ubuntu 26.04 (universe), so gate on
+    # the release version — earlier Ubuntus would need a third-party build
+    # shellcheck disable=SC1091  # /etc/os-release is provided by the OS
+    UBUNTU_VERSION="$(. /etc/os-release && [[ "$ID" == "ubuntu" ]] && echo "${VERSION_ID:-0}" || echo 0)"
+    if dpkg --compare-versions "$UBUNTU_VERSION" ge 26.04; then
+        if command -v ghostty &>/dev/null; then
+            info "Ghostty already installed, skipping."
+        else
+            info "Installing Ghostty..."
+            sudo apt-get install -y ghostty
+        fi
+    fi
 fi
 
 # grip renders Markdown previews for Emacs grip-mode; the apt package named
@@ -257,6 +270,7 @@ info "Creating symlinks..."
 link "$DOTFILES_DIR/zsh/.zshrc"        "$HOME/.zshrc"
 link "$DOTFILES_DIR/git/.gitconfig"    "$HOME/.gitconfig"
 link "$DOTFILES_DIR/emacs/init.el"     "$HOME/.emacs.d/init.el"
+link "$DOTFILES_DIR/ghostty/config"    "$HOME/.config/ghostty/config"
 
 if [[ -d "$DOTFILES_DIR/claude" ]]; then
     for f in "$DOTFILES_DIR/claude/"*; do
