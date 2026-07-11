@@ -3,3 +3,4 @@
 patch:
   schema_list:
     - schema: bopomofo_tw
+  menu/page_size: 9
