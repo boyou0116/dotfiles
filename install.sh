@@ -95,6 +95,14 @@ if command -v apt-get &>/dev/null; then
             sudo apt-get install -y ghostty
         fi
     fi
+
+    # ibus-rime: Rime input method engine for IBus (config symlinked below
+    # enables the bopomofo_tw schema). IBus runs on the desktop, so skip WSL,
+    # where typing goes through the Windows-side IME.
+    if ! is_wsl; then
+        info "Installing ibus-rime..."
+        sudo apt-get install -y ibus-rime
+    fi
 fi
 
 # grip renders Markdown previews for Emacs grip-mode; the apt package named
@@ -295,6 +303,7 @@ link "$DOTFILES_DIR/zsh/.zshrc"        "$HOME/.zshrc"
 link "$DOTFILES_DIR/git/.gitconfig"    "$HOME/.gitconfig"
 link "$DOTFILES_DIR/emacs/init.el"     "$HOME/.emacs.d/init.el"
 link "$DOTFILES_DIR/ghostty/config"    "$HOME/.config/ghostty/config"
+link "$DOTFILES_DIR/rime/default.custom.yaml" "$HOME/.config/ibus/rime/default.custom.yaml"
 
 if [[ -d "$DOTFILES_DIR/claude" ]]; then
     for f in "$DOTFILES_DIR/claude/"*; do

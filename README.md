@@ -10,6 +10,7 @@ Personal configuration files for Zsh, Git, Emacs, and Claude Code. Works on nati
 | `git/.gitconfig`         | `~/.gitconfig`                 | Git global configuration |
 | `emacs/init.el`          | `~/.emacs.d/init.el`           | Emacs configuration      |
 | `ghostty/config`         | `~/.config/ghostty/config`     | Ghostty terminal configuration |
+| `rime/default.custom.yaml` | `~/.config/ibus/rime/default.custom.yaml` | Rime input method (ibus-rime) overrides |
 | `claude/settings.json`   | `~/.claude/settings.json`      | Claude Code settings     |
 | `claude/statusline.sh`   | `~/.claude/statusline.sh`      | Claude Code status line  |
 
@@ -34,13 +35,15 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 2. Install the external tools Emacs needs (`ripgrep`, `fd-find`, `clangd`, `python3-pylsp` via apt; `grip` from PyPI via pipx — the apt package named `grip` is an unrelated CD ripper, and PEP 668 (Ubuntu 24.04+) forbids bare `pip install`)
 3. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
 4. Install [Ghostty](https://ghostty.org) on Ubuntu 26.04 or newer (where it's packaged in `universe`); skipped on earlier releases
-5. Install Emacs via snap (skipped if already present; aborts with an error if snap/systemd is unavailable)
-6. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
-7. Install [IntoneMono Nerd Font](https://www.nerdfonts.com/) — provides the icons used by `eza --icons` and Starship. On WSL it is installed into Windows per-user fonts via PowerShell (no admin needed); on native Linux into `~/.local/share/fonts`. Afterwards, close **all** terminal windows (GNOME Terminal shares one process), reopen, and select **IntoneMono Nerd Font Mono** in the terminal's profile settings (search "Intone", no space)
-8. Install Symbols Nerd Font — icon glyphs for GUI Emacs, which ignores the terminal font (`init.el` sets its own frame font)
-9. Symlink `~/.zshrc`, `~/.gitconfig`, `~/.emacs.d/init.el`, `~/.config/ghostty/config`, and `~/.claude/` configs (backs up any existing files with `.bak`)
-10. Set up GitHub SSH: generate an ed25519 key if missing, print the public key for you to add at [github.com/settings/keys](https://github.com/settings/keys), and switch this repo's remote from HTTPS to SSH once authentication works (press Enter to skip — the remote then stays on HTTPS and you can re-run later)
-11. Set zsh as the default shell
+5. Install [ibus-rime](https://rime.im) (Traditional Chinese input via the Rime engine); skipped on WSL, where typing goes through the Windows-side IME. After install, add the input source in GNOME Settings → Keyboard → **Chinese (Rime)**
+6. Install Google Chrome from Google's `.deb` (which also registers Google's apt repo for updates); skipped on WSL and non-amd64
+7. Install Emacs via snap (skipped if already present; aborts with an error if snap/systemd is unavailable)
+8. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
+9. Install [IntoneMono Nerd Font](https://www.nerdfonts.com/) — provides the icons used by `eza --icons` and Starship. On WSL it is installed into Windows per-user fonts via PowerShell (no admin needed); on native Linux into `~/.local/share/fonts`. Afterwards, close **all** terminal windows (GNOME Terminal shares one process), reopen, and select **IntoneMono Nerd Font Mono** in the terminal's profile settings (search "Intone", no space)
+10. Install Symbols Nerd Font — icon glyphs for GUI Emacs, which ignores the terminal font (`init.el` sets its own frame font)
+11. Symlink `~/.zshrc`, `~/.gitconfig`, `~/.emacs.d/init.el`, `~/.config/ghostty/config`, `~/.config/ibus/rime/default.custom.yaml`, and `~/.claude/` configs (backs up any existing files with `.bak`)
+12. Set up GitHub SSH: generate an ed25519 key if missing, print the public key for you to add at [github.com/settings/keys](https://github.com/settings/keys), and switch this repo's remote from HTTPS to SSH once authentication works (press Enter to skip — the remote then stays on HTTPS and you can re-run later)
+13. Set zsh as the default shell
 
 > **Note:** Edit `git/.gitconfig` to replace `name` and `email` under `[user]` with your own before running.
 
@@ -117,6 +120,14 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 | `statusline.sh` | Custom status line: model, repo/branch, git stats, context usage bar, cost, duration, rate limits, token/cache stats |
 
 `statusline.sh` requires `jq` and `bc` (installed by `install.sh`).
+
+---
+
+### Rime (`rime/default.custom.yaml`)
+
+- Trims the enabled schema list to **bopomofo_tw** (注音・臺灣) only
+- Machine state stays local and out of the repo: `user.yaml`, `installation.yaml`, `build/`, and `*.userdb/` are all generated by Rime
+- After editing the config, redeploy: IBus input switcher menu → **Deploy** (部署)
 
 ---
 

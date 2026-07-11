@@ -1,0 +1,5 @@
+# Rime (ibus-rime) user overrides. After editing, redeploy: IBus input
+# switcher menu → Deploy (部署), or run `rime_deployer` / restart ibus.
+patch:
+  schema_list:
+    - schema: bopomofo_tw
