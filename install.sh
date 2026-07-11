@@ -252,7 +252,10 @@ fi
 # Symbols Nerd Font: icon glyphs for GUI Emacs (nerd-icons/doom-modeline).
 # GUI Emacs ignores the terminal font, so it needs this even though
 # IntoneMono already bundles the same glyphs for terminal use.
-if fc-list | grep -qi "Symbols Nerd Font"; then
+# Font checks: grep must consume all of fc-list's output (no -q). grep -q
+# exits at the first match, fc-list dies of SIGPIPE, and pipefail turns that
+# into a false "not installed" — re-downloading fonts on every run.
+if fc-list | grep -i "Symbols Nerd Font" >/dev/null; then
     info "Symbols Nerd Font already installed, skipping."
 else
     SYM_DIR="$HOME/.local/share/fonts/NerdFontsSymbolsOnly"
@@ -271,7 +274,7 @@ fi
 # mixed Chinese/English text (e.g. org tables) aligned. Terminal Emacs doesn't
 # need it — the terminal grid already forces CJK into 2 cells. Always
 # installed Linux-side: GUI Emacs reads Linux fonts even under WSLg.
-if fc-list | grep -qi "Sarasa Mono TC Nerd Font"; then
+if fc-list | grep -i "Sarasa Mono TC Nerd Font" >/dev/null; then
     info "Sarasa Mono TC Nerd Font already installed, skipping."
 else
     SARASA_DIR="$HOME/.local/share/fonts/SarasaMonoTCNerdFont"
