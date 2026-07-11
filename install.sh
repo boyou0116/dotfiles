@@ -23,6 +23,8 @@ link() {
     info "Linked $dst → $src"
 }
 
+is_wsl() { [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version; }
+
 # ── Prerequisites (Ubuntu/Debian) ────────────────────────────────────────────
 
 if command -v apt-get &>/dev/null; then
@@ -160,13 +162,32 @@ else
     info "Claude Code already installed, skipping."
 fi
 
+# Google Chrome: not in Ubuntu's repos; Google's .deb also registers their apt
+# repo (google-chrome.list), so later apt upgrades keep it current. amd64 only —
+# Google ships no Linux arm64 build. On WSL the browser lives on the Windows side.
+if is_wsl; then
+    info "WSL detected, skipping Google Chrome (use the Windows-side browser)."
+elif ! command -v apt-get &>/dev/null || [[ "$(dpkg --print-architecture)" != "amd64" ]]; then
+    warn "Skipping Google Chrome (needs apt on amd64)."
+elif command -v google-chrome &>/dev/null; then
+    info "Google Chrome already installed, skipping."
+else
+    info "Installing Google Chrome..."
+    CHROME_TMP="$(mktemp -d)"
+    curl -fL --retry 3 --progress-bar -o "$CHROME_TMP/google-chrome.deb" \
+        "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    # mktemp -d creates a 0700 dir apt's sandbox user (_apt) cannot traverse;
+    # grant search (x) permission or apt falls back to root with a noisy warning
+    chmod 711 "$CHROME_TMP"
+    sudo apt-get install -y "$CHROME_TMP/google-chrome.deb"
+    rm -rf "$CHROME_TMP"
+fi
+
 # ── Nerd Font (IntoneMono, provides terminal icons for eza/Starship) ─────────
 
 FONT_NAME="IntoneMono"
 FONT_ASSET="IntelOneMono.tar.xz"
 FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$FONT_ASSET"
-
-is_wsl() { [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version; }
 
 download_font() {
     FONT_TMP="$(mktemp -d)"
