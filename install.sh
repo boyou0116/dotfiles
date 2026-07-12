@@ -51,8 +51,7 @@ if command -v apt-get &>/dev/null; then
         shellcheck \
         fzf \
         htop \
-        tree \
-        wl-clipboard
+        tree
 
     # Tools used by Emacs (init.el): LSP servers and search backends
     info "Installing Emacs external tools..."
