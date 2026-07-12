@@ -25,6 +25,11 @@ link() {
 
 is_wsl() { [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version; }
 
+# curl progress for big downloads: a live bar on a terminal, but silent when
+# piped (e.g. | tee): the bar repaints via \r, and a log records every repaint
+# as another wall of '#'
+if [[ -t 2 ]]; then CURL_PROGRESS=(--progress-bar); else CURL_PROGRESS=(-sS); fi
+
 # ── Prerequisites (Ubuntu/Debian) ────────────────────────────────────────────
 
 if command -v apt-get &>/dev/null; then
@@ -182,7 +187,7 @@ elif command -v google-chrome &>/dev/null; then
 else
     info "Installing Google Chrome..."
     CHROME_TMP="$(mktemp -d)"
-    curl -fL --retry 3 --progress-bar -o "$CHROME_TMP/google-chrome.deb" \
+    curl -fL --retry 3 "${CURL_PROGRESS[@]}" -o "$CHROME_TMP/google-chrome.deb" \
         "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
     # mktemp -d creates a 0700 dir apt's sandbox user (_apt) cannot traverse;
     # grant search (x) permission or apt falls back to root with a noisy warning
@@ -288,7 +293,7 @@ else
     SARASA_DIR="$HOME/.local/share/fonts/SarasaMonoTCNerdFont"
     SARASA_TMP="$(mktemp -d)"
     info "Downloading Sarasa Mono TC Nerd Font (2:1 CJK font for GUI Emacs, ~143 MB)..."
-    curl -fL --retry 3 --progress-bar -o "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" \
+    curl -fL --retry 3 "${CURL_PROGRESS[@]}" -o "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" \
         "https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/latest/download/sarasa-mono-tc-nerd-font.zip"
     mkdir -p "$SARASA_DIR"
     unzip -qo "$SARASA_TMP/sarasa-mono-tc-nerd-font.zip" -d "$SARASA_DIR"
