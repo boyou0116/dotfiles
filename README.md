@@ -122,6 +122,8 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 
 `statusline.sh` requires `jq` and `bc` (installed by `install.sh`).
 
+> **Per-machine step:** the fullscreen TUI copies on mouse selection by default. That toggle lives in `~/.claude.json` (machine-local state, not syncable via `settings.json`), so on each new machine run `/config` in Claude Code and turn **Copy on select** off — copying is then explicit via `Ctrl+Shift+C`, matching the tmux/terminal setup.
+
 ---
 
 ### tmux (`tmux/.tmux.conf`)
