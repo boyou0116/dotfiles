@@ -11,6 +11,7 @@ Personal configuration files for Zsh, Git, Emacs, and Claude Code. Works on nati
 | `emacs/init.el`          | `~/.emacs.d/init.el`           | Emacs configuration      |
 | `ghostty/config`         | `~/.config/ghostty/config`     | Ghostty terminal configuration |
 | `rime/default.custom.yaml` | `~/.config/ibus/rime/default.custom.yaml` | Rime input method (ibus-rime) overrides |
+| `tmux/.tmux.conf`        | `~/.tmux.conf`                 | tmux configuration       |
 | `claude/settings.json`   | `~/.claude/settings.json`      | Claude Code settings     |
 | `claude/statusline.sh`   | `~/.claude/statusline.sh`      | Claude Code status line  |
 
@@ -31,7 +32,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 ```
 
 `install.sh` will:
-1. Install apt packages (`curl`, `git`, `zsh`, `tmux`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`, `fontconfig`, `fonts-noto-core`, `xz-utils`, `build-essential`, `gdb`, `python3-venv`, `unzip`, `zip`, `shellcheck`, `fzf`, `htop`, `tree`)
+1. Install apt packages (`curl`, `git`, `zsh`, `tmux`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`, `fontconfig`, `fonts-noto-core`, `xz-utils`, `build-essential`, `gdb`, `python3-venv`, `unzip`, `zip`, `shellcheck`, `fzf`, `htop`, `tree`, `wl-clipboard`)
 2. Install the external tools Emacs needs (`ripgrep`, `fd-find`, `clangd`, `python3-pylsp` via apt; `grip` from PyPI via pipx — the apt package named `grip` is an unrelated CD ripper, and PEP 668 (Ubuntu 24.04+) forbids bare `pip install`)
 3. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
 4. Install [Ghostty](https://ghostty.org) on Ubuntu 26.04 or newer (where it's packaged in `universe`); skipped on earlier releases
@@ -41,7 +42,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 8. Install Starship, zoxide, nvm, and the Claude Code CLI (skipped if already present)
 9. Install [IntoneMono Nerd Font](https://www.nerdfonts.com/) — provides the icons used by `eza --icons` and Starship. On WSL it is installed into Windows per-user fonts via PowerShell (no admin needed); on native Linux into `~/.local/share/fonts`. Afterwards, close **all** terminal windows (GNOME Terminal shares one process), reopen, and select **IntoneMono Nerd Font Mono** in the terminal's profile settings (search "Intone", no space)
 10. Install Symbols Nerd Font — icon glyphs for GUI Emacs, which ignores the terminal font (`init.el` sets its own frame font)
-11. Symlink `~/.zshrc`, `~/.gitconfig`, `~/.emacs.d/init.el`, `~/.config/ghostty/config`, `~/.config/ibus/rime/default.custom.yaml`, and `~/.claude/` configs (backs up any existing files with `.bak`)
+11. Symlink `~/.zshrc`, `~/.gitconfig`, `~/.emacs.d/init.el`, `~/.config/ghostty/config`, `~/.tmux.conf`, `~/.config/ibus/rime/default.custom.yaml`, and `~/.claude/` configs (backs up any existing files with `.bak`)
 12. Set up GitHub SSH: generate an ed25519 key if missing, print the public key for you to add at [github.com/settings/keys](https://github.com/settings/keys), and switch this repo's remote from HTTPS to SSH once authentication works (press Enter to skip — the remote then stays on HTTPS and you can re-run later)
 13. Set zsh as the default shell
 
@@ -120,6 +121,13 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 | `statusline.sh` | Custom status line: model, repo/branch, git stats, context usage bar, cost, duration, rate limits, token/cache stats |
 
 `statusline.sh` requires `jq` and `bc` (installed by `install.sh`).
+
+---
+
+### tmux (`tmux/.tmux.conf`)
+
+- Mouse mode on: the wheel scrolls tmux's scrollback instead of being translated into arrow keys (which cycles shell history at a prompt). Hold **Shift** while selecting for the terminal's native copy
+- Mouse selection lands in the system clipboard two ways: OSC 52 (`set-clipboard external`, works in Ghostty and over SSH) plus a `wl-copy` pipe for VTE terminals (Ptyxis, GNOME Terminal), which [reject OSC 52](https://gitlab.gnome.org/GNOME/vte/-/issues/2495)
 
 ---
 
