@@ -88,17 +88,32 @@ if command -v apt-get &>/dev/null; then
         info "eza already installed, skipping."
     fi
 
-    # Ghostty terminal: first packaged in Ubuntu 26.04 (universe), so gate on
-    # the release version — earlier Ubuntus would need a third-party build
+    # Ghostty terminal: in Ubuntu's own repos from 26.04 (universe). On
+    # 24.04+ use the community PPA's native .deb instead (Ghostty needs a
+    # newer GTK4 than the distro ships, and the PPA only builds for 24.04+).
+    # Anything older falls back to the snap, which bundles its own GTK4
+    # stack. Fallbacks are skipped on WSL, where Windows Terminal is the
+    # terminal anyway.
     # shellcheck disable=SC1091  # /etc/os-release is provided by the OS
     UBUNTU_VERSION="$(. /etc/os-release && [[ "$ID" == "ubuntu" ]] && echo "${VERSION_ID:-0}" || echo 0)"
-    if dpkg --compare-versions "$UBUNTU_VERSION" ge 26.04; then
-        if command -v ghostty &>/dev/null; then
-            info "Ghostty already installed, skipping."
-        else
-            info "Installing Ghostty..."
-            sudo apt-get install -y ghostty
-        fi
+    if command -v ghostty &>/dev/null; then
+        info "Ghostty already installed, skipping."
+    elif dpkg --compare-versions "$UBUNTU_VERSION" ge 26.04; then
+        info "Installing Ghostty..."
+        sudo apt-get install -y ghostty
+    elif [[ "$UBUNTU_VERSION" == 0 ]] || is_wsl; then
+        :  # non-Ubuntu or WSL: no Ghostty
+    elif dpkg --compare-versions "$UBUNTU_VERSION" ge 24.04; then
+        info "Installing Ghostty from the mkasberg/ghostty-ubuntu PPA..."
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository -y ppa:mkasberg/ghostty-ubuntu
+        sudo apt-get update -q
+        sudo apt-get install -y ghostty
+    elif command -v snap &>/dev/null && [[ -d /run/systemd/system ]]; then
+        info "Installing Ghostty via snap (no apt package for Ubuntu $UBUNTU_VERSION)..."
+        sudo snap install ghostty --classic
+    else
+        warn "Skipping Ghostty: no apt package for Ubuntu $UBUNTU_VERSION and snap is unavailable."
     fi
 
     # ibus-rime: Rime input method engine for IBus (config symlinked below
