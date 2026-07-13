@@ -30,7 +30,7 @@
 ;;; UI
 ;; Terminal Emacs inherits the terminal's font; GUI frames must be told
 ;; explicitly (IntoneMono is installed by install.sh)
-(add-to-list 'default-frame-alist '(font . "IntoneMono Nerd Font Mono-13"))
+(add-to-list 'default-frame-alist '(font . "IntoneMono Nerd Font Mono-15"))
 (menu-bar-mode -1)
 
 ;; CJK in GUI frames: Sarasa Mono TC (installed by install.sh), rescaled so
