@@ -3,7 +3,7 @@
 # Nerd Font installed by install.sh — provides the icons used by
 # eza --icons and Starship
 font-family = IntoneMono Nerd Font Mono
-font-size = 14
+font-size = 16
 
 cursor-style = block
 # Shell integration forces a bar cursor at the prompt by default, which
