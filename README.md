@@ -14,6 +14,7 @@ Personal configuration files for Zsh, Git, Emacs, and Claude Code. Works on nati
 | `tmux/.tmux.conf`        | `~/.tmux.conf`                 | tmux configuration       |
 | `claude/settings.json`   | `~/.claude/settings.json`      | Claude Code settings     |
 | `claude/statusline.sh`   | `~/.claude/statusline.sh`      | Claude Code status line  |
+| `claude/hooks/`          | `~/.claude/hooks/`             | Claude Code hook scripts |
 
 ---
 
@@ -117,10 +118,11 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 
 | File            | Purpose                                                              |
 |-----------------|------------------------------------------------------------------------|
-| `settings.json` | Enables the `codex@openai-codex` plugin, fullscreen TUI, and points `statusLine` at `statusline.sh` |
+| `settings.json` | Enables the `codex@openai-codex` plugin, fullscreen TUI, points `statusLine` at `statusline.sh`, and registers the prompt-log hook |
 | `statusline.sh` | Custom status line: model, repo/branch, git stats, context usage bar, cost, duration, rate limits, token/cache stats |
+| `hooks/save-prompt.sh` | `UserPromptSubmit` hook: appends every prompt to `~/.claude/prompt-log/YYYY-MM-DD.jsonl` (one JSON line with timestamp, session ID, cwd, and prompt — filter by project with `jq 'select(.cwd == ...)'`) |
 
-`statusline.sh` requires `jq` and `bc` (installed by `install.sh`).
+`statusline.sh` and `save-prompt.sh` require `jq` (installed by `install.sh`); `statusline.sh` also needs `bc`.
 
 > **Per-machine step:** the fullscreen TUI copies on mouse selection by default. That toggle lives in `~/.claude.json` (machine-local state, not syncable via `settings.json`), so on each new machine run `/config` in Claude Code and turn **Copy on select** off — copying is then explicit via `Ctrl+Shift+C`, matching the tmux/terminal setup.
 
