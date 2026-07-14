@@ -16,5 +16,17 @@
   },
   "tui": "fullscreen",
   "theme": "dark",
-  "model": "claude-fable-5[1m]"
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/save-prompt.sh"
+          }
+        ]
+      }
+    ]
+  }
 }
