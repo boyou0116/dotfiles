@@ -52,10 +52,13 @@
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
-;; The 1.228 rescale above is only approximate: font sizes round to integer
-;; pixels, so a CJK char rarely spans exactly two columns and long org tables
-;; drift out of alignment. valign fixes this by pixel-aligning each table
-;; column instead of relying on character widths.
+;; Even with the rescale above, org tables still misalign. Main cause:
+;; East-Asian-Ambiguous chars like → (U+2192) — IntoneMono lacks the glyph,
+;; so Emacs falls back to Sarasa, which draws it fullwidth (x1.228 ≈ 2.5
+;; columns) while org counts it as 1. Secondary cause: font sizes round to
+;; integer pixels, so the 2:1 ratio is never exact and long tables drift.
+;; valign sidesteps both by pixel-aligning each table column instead of
+;; relying on character widths.
 (use-package valign
   :if (display-graphic-p)
   :hook ((org-mode . valign-mode)
