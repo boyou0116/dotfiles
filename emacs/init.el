@@ -52,6 +52,15 @@
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
+;; The 1.228 rescale above is only approximate: font sizes round to integer
+;; pixels, so a CJK char rarely spans exactly two columns and long org tables
+;; drift out of alignment. valign fixes this by pixel-aligning each table
+;; column instead of relying on character widths.
+(use-package valign
+  :if (display-graphic-p)
+  :hook ((org-mode . valign-mode)
+	 (markdown-mode . valign-mode)))
+
 (global-display-line-numbers-mode 1)
 (setq inhibit-startup-screen t)
 
