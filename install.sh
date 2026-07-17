@@ -19,7 +19,9 @@ link() {
         warn "Backing up existing $dst → ${dst}.bak"
         mv "$dst" "${dst}.bak"
     fi
-    ln -sf "$src" "$dst"
+    # -n: if dst is already a symlink to a directory, replace the link itself
+    # instead of dereferencing it and creating src inside the target dir
+    ln -sfn "$src" "$dst"
     info "Linked $dst → $src"
 }
 
