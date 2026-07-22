@@ -1,0 +1,39 @@
+# Starship prompt configuration.
+# Symlinked to ~/.config/starship.toml by install.sh. Uses Nerd Font glyphs
+# from IntoneMono (installed by install.sh); with a non–Nerd Font a couple of
+# icons show as tofu but the prompt still works.
+
+# Blank line before each prompt for breathing room.
+add_newline = true
+
+# Two-line prompt: context on the first line, the input character alone on the
+# second, so long paths never push your cursor around.
+format = """
+$directory\
+$git_branch\
+$git_status\
+$cmd_duration\
+$line_break\
+$character"""
+
+# Language/tool versions on the right, shown only inside a relevant project.
+right_format = "$nodejs$python$rust$golang$c"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[directory]
+style = "bold cyan"
+truncation_length = 3      # keep at most 3 path segments…
+truncate_to_repo = true    # …but measured from the repo root when inside one
+
+[git_branch]
+style = "bold purple"
+
+[git_status]
+style = "bold red"
+
+[cmd_duration]
+min_time = 2000            # only report commands slower than 2s
+format = "took [$duration](bold yellow) "
