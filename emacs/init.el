@@ -26,6 +26,15 @@
 
 (global-set-key (kbd "C-c i") 'open-init-file)
 
+;; GUI Emacs launched from the desktop (not a shell) doesn't inherit the shell
+;; PATH, so tools in ~/.local/bin — grip (Markdown preview) and markdown_py —
+;; go unfound. Add it to exec-path and PATH. Must run before markdown-mode
+;; loads: markdown-command's default probes PATH once, at load time.
+(let ((local-bin (expand-file-name "~/.local/bin")))
+  (add-to-list 'exec-path local-bin)
+  (unless (member local-bin (split-string (getenv "PATH") path-separator))
+    (setenv "PATH" (concat local-bin path-separator (getenv "PATH")))))
+
 
 ;;; UI
 ;; Terminal Emacs inherits the terminal's font; GUI frames must be told
@@ -171,12 +180,15 @@
 
 ;;; Markdown
 (use-package markdown-mode
-  :mode ("README\\.md\\'" . gfm-mode))
-
-(use-package grip-mode
-  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  ;; Bind grip here, not in grip-mode's own use-package: markdown-mode-command-map
+  ;; only exists once markdown-mode is loaded, and grip-mode loads too early to
+  ;; see it (the binding was silently dropped, leaving C-c C-c g undefined).
   :bind (:map markdown-mode-command-map
               ("g" . grip-mode)))
+
+(use-package grip-mode
+  :ensure t)
 
 ;;; Setting for JSON
 (use-package json-mode)

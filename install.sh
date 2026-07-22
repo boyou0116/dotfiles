@@ -142,6 +142,20 @@ else
     info "grip already installed, skipping."
 fi
 
+# grip 4.6.2 ships a page template whose <html> lacks the data-color-mode /
+# data-*-theme attributes that current GitHub (Primer) CSS needs. Without them
+# every color/border custom property (e.g. --borderColor-default) stays
+# undefined, so `border: 1px solid var(--borderColor-default)` is invalid and
+# tables render with no borders (and washed-out colors). Add the attributes.
+# Idempotent and re-run every install so it survives grip upgrades that
+# overwrite the template. Handles both the pip --user and pipx venv layouts.
+GRIP_BASE="$(find "$HOME/.local/lib" "$HOME/.local/share/pipx/venvs/grip" \
+    -name base.html -path '*/grip/templates/*' 2>/dev/null | head -1)"
+if [[ -n "$GRIP_BASE" ]] && ! grep -q 'data-color-mode' "$GRIP_BASE"; then
+    info "Patching grip template to enable GitHub theme (fixes borderless tables)..."
+    sed -i 's|<html lang="en">|<html lang="en" data-color-mode="light" data-light-theme="light" data-dark-theme="dark">|' "$GRIP_BASE"
+fi
+
 if ! command -v emacs &>/dev/null; then
     # snap needs a running systemd (not the case on WSL without systemd=true)
     if ! command -v snap &>/dev/null || [[ ! -d /run/systemd/system ]]; then
