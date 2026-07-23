@@ -66,6 +66,7 @@ if command -v apt-get &>/dev/null; then
         ripgrep \
         fd-find \
         clangd \
+        bear \
         python3-pylsp \
         python3-pip
 
