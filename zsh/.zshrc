@@ -92,6 +92,12 @@ export NVM_DIR="$HOME/.nvm"
 # the config file's no-cursor and re-enables the integration's bar cursor at
 # the prompt. Strip the cursor feature here: the integration only reads
 # GHOSTTY_SHELL_FEATURES at the first prompt, after .zshrc has run.
+#
+# Fixed upstream in ghostty 1.3.0~us1-0ubuntu4 (LP #2160296): the flag is
+# gone from the Exec lines and ssh-env is patched on as a compiled-in field
+# default instead, which is the baseline every assignment resets to, so
+# ~/.config/ghostty/config wins again. That version is only in Ubuntu 26.10;
+# drop this block once every release install.sh installs from has it.
 if [[ -n "$GHOSTTY_SHELL_FEATURES" ]]; then
   _ghostty_features=(${(s:,:)GHOSTTY_SHELL_FEATURES})
   export GHOSTTY_SHELL_FEATURES=${(j:,:)_ghostty_features:#cursor*}
