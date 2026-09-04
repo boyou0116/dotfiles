@@ -66,9 +66,9 @@ Exec line。CLI 在 config 檔之後賦值,於是:
 
 `zsh/.zshrc` 的那段(見 commit 4ba7568 的註解)可以刪除,當以下全部成立:
 
-- [ ] `install.sh` 走 apt 安裝的每個 release(目前是 26.04+)都拿得到
-      `ghostty >= 1.3.0~us1-0ubuntu4`。實務上等於 **26.04 出現 SRU**,
-      或 `install.sh` 不再支援 26.04。
+- [ ] **26.04 出現 SRU**(或 `install.sh` 不再支援 26.04)。受影響的只有
+      26.04 走 archive 的那條路徑——24.04/25.10 走 mkasberg PPA,不受影響
+      (見 §6),22.04 走 snap,也不受影響。
 - [ ] 在該機器上驗證預設值已翻轉:
       `ghostty +show-config --default=true | grep shell-integration-features`
       顯示 `ssh-env` 而非 `no-ssh-env`。
@@ -87,6 +87,22 @@ Exec line。CLI 在 config 檔之後賦值,於是:
 | 修正版本                      | `1.3.0~us1-0ubuntu4`,stonking(26.10)        |
 | 26.04 SRU nomination          | **無**                                        |
 | 本機(22.04 + snap v1.3.1)   | 不受影響,走的不是 Ubuntu 的 deb launcher     |
+| mkasberg PPA(24.04/25.10/26.04)| **不受影響**,見下                          |
+
+`mkasberg/ghostty-ubuntu` 的 `build-ppa/ghostty/debian/patches/` 只有
+`001-bzip2-to-bz2.patch` 與 `002-harfbuzz.patch`(皆為建置修正),`debian/rules`、
+`debian/ghostty.install`、`patch-for-dist.sh` 都沒有碰 `.desktop` 或 D-Bus service
+——即 Exec line 是 upstream 原樣。本機 snap 內的 upstream 檔案可佐證:
+
+```
+share/applications/com.mitchellh.ghostty.desktop
+  Exec=.../ghostty --gtk-single-instance=true
+share/dbus-1/services/com.mitchellh.ghostty.service
+  Exec=.../ghostty --gtk-single-instance=true --initial-window=false
+```
+
+兩處都沒有 `--shell-integration-features`。該 flag 純粹是 Canonical archive
+打包的產物,PPA 版本(1.3.1~ppa2-{noble,questing,resolute}1)不帶。
 
 ## 7. 驗證指令速查
 
@@ -105,7 +121,7 @@ XDG_CONFIG_HOME=/tmp/x SNAP_REEXEC=0 ghostty +show-config | grep shell-integrati
 
 ## 8. 未驗證
 
-- [ ] **mkasberg PPA(24.04+ 路徑)是否受影響**:PPA 是社群獨立打包,
-      推測不含 Canonical 的 enforce patch,但沒實際查過 `debian/patches`。
-      若確認乾淨,則受影響範圍只有 26.04 的 archive 套件,§5 的條件可再收斂。
 - [ ] 26.04 SRU 是否會發生(需定期回看 LP #2160296 的 nomination 欄位)。
+- [ ] PPA 的結論是讀 packaging 原始碼得出的,沒有實際解開 `.deb` 驗過
+      `usr/share/applications/com.mitchellh.ghostty.desktop`。若哪天在 24.04
+      上真的裝了 PPA 版,順手 `grep Exec` 一次即可閉環。
