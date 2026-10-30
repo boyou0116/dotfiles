@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (setq use-package-verbose t)
 (setq message-log-max t)
 (setq package-enable-at-startup nil)
@@ -170,12 +171,6 @@
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
-
-(use-package corfu-terminal
-  :after corfu
-  :config
-  (unless (display-graphic-p)
-    (corfu-terminal-mode 1)))
 
 
 ;;; Markdown
