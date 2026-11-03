@@ -70,6 +70,28 @@ if command -v apt-get &>/dev/null; then
         python3-pylsp \
         python3-pip
 
+    # TeX Live for AUCTeX (init.el): XeLaTeX (its default engine) with
+    # Chinese support (ctex/xeCJK + Fandol/AR PL fonts), the common LaTeX
+    # packages, amsmath & co., biblatex/biber, plus latexmk and chktex.
+    # Not texlive-full (~6 GB). --no-install-recommends skips texlive-latex-extra's
+    # default-jre and the *-doc packages; the fonts it recommends are listed
+    # explicitly instead.
+    info "Installing TeX Live (XeLaTeX + Chinese)..."
+    sudo apt-get install -y --no-install-recommends \
+        texlive-xetex \
+        texlive-lang-chinese \
+        texlive-latex-recommended \
+        texlive-latex-extra \
+        texlive-science \
+        texlive-bibtex-extra \
+        texlive-fonts-recommended \
+        texlive-plain-generic \
+        lmodern \
+        tex-gyre \
+        biber \
+        latexmk \
+        chktex
+
     if ! command -v eza &>/dev/null; then
         if apt-cache show eza &>/dev/null; then
             info "Installing eza..."

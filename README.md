@@ -34,7 +34,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 
 `install.sh` will:
 1. Install apt packages (`curl`, `git`, `zsh`, `tmux`, `bat`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `jq`, `bc`, `fontconfig`, `fonts-noto-core`, `xz-utils`, `build-essential`, `gdb`, `python3-venv`, `unzip`, `zip`, `shellcheck`, `fzf`, `htop`, `tree`)
-2. Install the external tools Emacs needs (`ripgrep`, `fd-find`, `clangd`, `python3-pylsp` via apt; `grip` from PyPI via pipx — the apt package named `grip` is an unrelated CD ripper, and PEP 668 (Ubuntu 24.04+) forbids bare `pip install`)
+2. Install the external tools Emacs needs (`ripgrep`, `fd-find`, `clangd`, `python3-pylsp` via apt; TeX Live for AUCTeX — XeLaTeX with Chinese support, `texlive-latex-extra`, `texlive-science`, biblatex/`biber`, `latexmk`, `chktex`, not `texlive-full`; `grip` from PyPI via pipx — the apt package named `grip` is an unrelated CD ripper, and PEP 668 (Ubuntu 24.04+) forbids bare `pip install`)
 3. Install `eza` (adds the [eza apt repo](https://github.com/eza-community/eza/blob/main/INSTALL.md#debian--ubuntu) automatically on distros where it isn't in the default repos yet, e.g. Ubuntu 22.04)
 4. Install [Ghostty](https://ghostty.org) via apt on Ubuntu 26.04 or newer (where it's packaged in `universe`), via the [mkasberg/ghostty-ubuntu PPA](https://github.com/mkasberg/ghostty-ubuntu) on 24.04+, or via snap on older releases; fallbacks skipped on WSL
 5. Install [ibus-rime](https://rime.im) (Traditional Chinese input via the Rime engine); skipped on WSL, where typing goes through the Windows-side IME. After install, add the input source in GNOME Settings → Keyboard → **Chinese (Rime)**
@@ -107,6 +107,7 @@ git clone https://github.com/boyou0116/dotfiles.git ~/dotfiles && ~/dotfiles/ins
 
 - Packages auto-install on first launch via `package.el` + `use-package` (`use-package-always-ensure`) — the first launch takes a few minutes and prints compile warnings; that's normal. A transient `compat-31` activation error on the very first run heals itself on the next launch
 - Completion stack: vertico + orderless + marginalia + consult + embark, corfu (+ corfu-terminal in TTY) with cape
+- LaTeX via AUCTeX: XeLaTeX by default (Chinese via ctex/xeCJK), RefTeX, SyncTeX. On WSL, `C-c C-v` opens the PDF in Windows' [SumatraPDF](https://www.sumatrapdfreader.org) with forward search — install it on Windows yourself (`winget install SumatraPDF.SumatraPDF`)
 - LSP via eglot for C/C++ (clangd with `--query-driver`), Python, Go, and Haskell
 - magit, avy, which-key, windmove, recentf/savehist persistence
 - UI: modus-vivendi theme, doom-modeline, line numbers, no menu/tool/scroll bars
