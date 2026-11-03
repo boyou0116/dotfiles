@@ -185,6 +185,69 @@
 (use-package grip-mode
   :ensure t)
 
+;;; LaTeX
+;; AUCTeX takes over .tex files with its own LaTeX-mode (capital L); hooks on
+;; the built-in latex-mode never fire. The package provides no `auctex'
+;; feature, so it can't be `require'd; use-package just installs it.
+(use-package auctex
+  :defer t
+  :hook ((LaTeX-mode . reftex-mode)
+         (LaTeX-mode . TeX-source-correlate-mode))
+  :custom
+  (TeX-auto-save t)          ; cache parsed macros/labels per file
+  (TeX-parse-self t)         ; parse the file on load for completion
+  (TeX-master nil)           ; ask for the master file in multi-file projects
+  (TeX-engine 'xetex)        ; xelatex: needed for Chinese (xeCJK/ctex)
+  (TeX-PDF-mode t)
+  (TeX-source-correlate-start-server nil) ; no inverse search, so don't ask
+  (reftex-plug-into-AUCTeX t)
+  :config
+  ;; On WSL, view PDFs in Windows' SumatraPDF. It auto-reloads on recompile
+  ;; and doesn't lock the file. It needs Windows paths (wslpath -w); files in
+  ;; the Linux filesystem become \\wsl.localhost\... UNC paths, which it opens.
+  ;; Native Ubuntu keeps AUCTeX's default viewer.
+  ;; The package's :config runs before AUCTeX's `tex' library is loaded, so
+  ;; defer to it (TeX-view-program-list is defined there).
+  (with-eval-after-load 'tex
+    (when (getenv "WSL_DISTRO_NAME")
+      (defun my/wsl-to-windows-path (file)
+        (string-trim (shell-command-to-string
+                      (concat "wslpath -w " (shell-quote-argument file)))))
+
+      (defun my/sumatra-exe ()
+        "Locate SumatraPDF.exe: on PATH, or in its per-user/system install dirs.
+The Windows username differs from the WSL one, so ask Windows for
+%LOCALAPPDATA% (winget's default per-user location) instead of guessing."
+        (let ((localappdata
+               (string-trim (shell-command-to-string
+                             "cmd.exe /c 'echo %LOCALAPPDATA%' 2>/dev/null"))))
+          (or (executable-find "SumatraPDF.exe")
+              (seq-find #'file-executable-p
+                        (list (and (string-match-p "\\`[A-Za-z]:" localappdata)
+                                   (concat (string-trim (shell-command-to-string
+                                                         (concat "wslpath -u "
+                                                                 (shell-quote-argument localappdata))))
+                                           "/SumatraPDF/SumatraPDF.exe"))
+                              "/mnt/c/Program Files/SumatraPDF/SumatraPDF.exe"
+                              "/mnt/c/Program Files (x86)/SumatraPDF/SumatraPDF.exe"))
+              (user-error "SumatraPDF.exe not found; install it on Windows"))))
+
+      (defun my/tex-view-sumatra ()
+        "Open the output PDF in SumatraPDF, forward-searching to point."
+        (let* ((pdf (expand-file-name (TeX-active-master (TeX-output-extension))))
+               (args (list "-reuse-instance" (my/wsl-to-windows-path pdf))))
+          (when (and TeX-source-correlate-mode buffer-file-name)
+            (setq args (append (list "-forward-search"
+                                     (my/wsl-to-windows-path buffer-file-name)
+                                     (number-to-string (line-number-at-pos)))
+                               args)))
+          (apply #'start-process "SumatraPDF" nil (my/sumatra-exe) args)))
+
+      (add-to-list 'TeX-view-program-list '("SumatraPDF" my/tex-view-sumatra))
+      (setq TeX-view-program-selection
+            (cons '(output-pdf "SumatraPDF")
+                  (assq-delete-all 'output-pdf TeX-view-program-selection))))))
+
 ;;; Setting for JSON
 (use-package json-mode)
 
